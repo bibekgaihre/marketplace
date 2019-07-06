@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+//please update based on permissions
 const SecureUI = () => {
   return (req, res, next) => {
     try {
