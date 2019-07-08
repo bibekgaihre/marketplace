@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { objectId } = mongoose.Schema;
+const { ObjectId } = mongoose.Schema;
 
 const userSchema = mongoose.Schema(
   {
@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
     gender: { type: String, enum: ["male", "female", "others"] },
     username: { type: String, required: true, unique: true },
     is_active: { type: Boolean, default: true },
-    roles: { type: String, required: true, enum: ["user", "vendor", "admin"], default: "user" }
+    roles: [{ type: String, required: true, enum: ["user", "vendor", "admin"], default: "user" }]
   },
   {
     collection: "user",

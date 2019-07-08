@@ -1,5 +1,6 @@
 const JWT = require("jsonwebtoken");
 const SecureCrypto = require("./encrypt_decrypt");
+const { ERR } = require("./error");
 
 class TokenManager {
   constructor({ appSecret }) {
