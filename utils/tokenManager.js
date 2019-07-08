@@ -1,5 +1,5 @@
 const JWT = require("jsonwebtoken");
-const Secure = require("./secure");
+const SecureCrypto = require("./encrypt_decrypt");
 
 class TokenManager {
   constructor({ appSecret }) {
@@ -10,7 +10,7 @@ class TokenManager {
   generate(data, jwt_duration) {
     return JWT.sign(
       {
-        data: Secure.encrypt(JSON.stringify(data), this.secret)
+        data: SecureCrypto.encrypt(JSON.stringify(data), this.secret)
       },
       this.secret,
       {
@@ -19,15 +19,18 @@ class TokenManager {
     );
   }
 
-  async validate(token) {
-    let data = await JWT.verify(token, this.secret, (err, tokenData) => {
-      if (err) throw "Invalid TokenData";
-      let data = tokenData.data || null;
-      if (data) {
-        data = JSON.parse(Secure.decrypt(data, this.secret));
-      }
+  validate(token) {
+    var me = this;
+    return new Promise((resolve, reject) => {
+      JWT.verify(token, me.secret, (err, tokenData) => {
+        if (err) throw ERR.TOKEN_INVALID;
+        let data = tokenData.data || false;
+        if (data) {
+          data = JSON.parse(SecureCrypto.decrypt(data, me.secret));
+        }
+        resolve({ data, tokenData });
+      });
     });
-    return { data, tokenData };
   }
 }
 
